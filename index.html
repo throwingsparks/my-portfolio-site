@@ -26,8 +26,8 @@
     --bg:#0a0a0b;
     --bg-raised:#131315;
     --line:#242426;
-    --tally:#e0122a;     
-    --pass:#2fbf71;       
+    --tally:#e0122a;      /* tally-light red, deliberately off Netflix's #e50914 */
+    --pass:#2fbf71;       /* QC "pass" green, used sparingly */
     --focus:#f3f1ec;
   }
 
@@ -167,6 +167,26 @@
     background:
       linear-gradient(180deg, transparent 0%, transparent 85%, var(--bg) 100%),
       repeating-linear-gradient(to bottom, rgba(255,255,255,.025) 0px, rgba(255,255,255,.025) 1px, transparent 1px, transparent 3px);
+    pointer-events:none;
+  }
+
+  .hero-photo{
+    position:absolute;
+    inset:0;
+    z-index:-2;
+    background-image:url('headshot.jpg');
+    background-size:cover;
+    background-position:center 18%;
+    filter:grayscale(1) contrast(1.05);
+    opacity:.16;
+    pointer-events:none;
+  }
+
+  .hero-photo-veil{
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    background:radial-gradient(ellipse at 28% 32%, rgba(10,10,11,.7) 0%, rgba(10,10,11,.55) 40%, rgba(10,10,11,.88) 100%);
     pointer-events:none;
   }
 
@@ -510,6 +530,8 @@
 
 <main>
   <section class="hero wrap" id="top" style="border-bottom:none;">
+    <div class="hero-photo"></div>
+    <div class="hero-photo-veil"></div>
     <h1 class="hero-name">Jesse Iden</h1>
     <p class="hero-role mono">OPERATIONS DIRECTOR — GLOBAL CONTENT &amp; QUALITY OPERATIONS</p>
     <p class="hero-desc">
