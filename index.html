@@ -17,7 +17,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
@@ -178,7 +178,8 @@
     background-size:cover;
     background-position:center 18%;
     filter:grayscale(1) contrast(1.05);
-    opacity:.16;
+    opacity:.30;
+    transition:opacity .1s linear;
     pointer-events:none;
   }
 
@@ -215,6 +216,38 @@
     color:var(--tally);
     letter-spacing:.02em;
     margin-bottom:28px;
+  }
+
+  .morph{
+    opacity:0;
+    transform:translateY(8px);
+    filter:blur(6px);
+    transition:opacity .5s ease, transform .5s ease, filter .5s ease;
+  }
+  .morph.visible{ opacity:1; transform:translateY(0); filter:blur(0); }
+  .morph.swap{
+    opacity:0;
+    transform:translateY(-6px);
+    filter:blur(6px);
+    transition:opacity .4s ease, transform .4s ease, filter .4s ease;
+  }
+  .morph-inline{ display:inline-block; }
+
+  .lang-tag{
+    display:inline-block;
+    font-size:.62rem;
+    padding:2px 7px;
+    margin-right:12px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    color:var(--ink-dim);
+    letter-spacing:.08em;
+    vertical-align:middle;
+  }
+
+  .lang-jp{
+    font-family:'Noto Sans JP', 'JetBrains Mono', monospace;
+    letter-spacing:.04em;
   }
 
   .hero-desc{
@@ -533,15 +566,15 @@
     <div class="hero-photo"></div>
     <div class="hero-photo-veil"></div>
     <h1 class="hero-name">Jesse Iden</h1>
-    <p class="hero-role mono">OPERATIONS DIRECTOR — GLOBAL CONTENT &amp; QUALITY OPERATIONS</p>
-    <p class="hero-desc">
+    <p class="hero-role mono morph" id="heroRole"><span class="lang-tag mono" id="langTag">EN</span><span id="roleText">OPERATIONS DIRECTOR — GLOBAL CONTENT &amp; QUALITY OPERATIONS</span></p>
+    <p class="hero-desc morph" id="heroDesc">
       I build and scale global content operations, vendor programs, and quality systems for streaming and entertainment companies — bringing structure to complex, ambiguous environments across 50+ countries.
     </p>
 
     <div class="cta-row">
       <a class="btn btn-primary" href="#contact">
         <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        Get in touch
+        <span class="morph morph-inline" id="ctaPrimaryText">Get in touch</span>
       </a>
       <a class="btn btn-ghost" href="https://www.linkedin.com/in/jesseiden/" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
@@ -549,7 +582,7 @@
       </a>
       <a class="btn btn-ghost" href="#log">
         <svg viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>
-        View resume
+        <span class="morph morph-inline" id="ctaResumeText">View resume</span>
       </a>
     </div>
   </section>
@@ -622,7 +655,7 @@
               <span class="log-dur mono">2015 — 2019 · 4Y 1M</span>
             </div>
             <div class="log-role">Global Asset Management Consultant</div>
-            <div class="log-org">Warner Music Group</div>
+            <div class="log-org">Warner Music Group (MBO Partners)</div>
             <ul class="log-bullets">
               <li>Managed global content operations for major and independent record labels, overseeing metadata governance, digital release workflows, and worldwide distribution — including Grammy Awards submission production.</li>
             </ul>
@@ -767,6 +800,106 @@
   }
   tick();
   setInterval(tick, 1000);
+
+  // ---- Hero text: appears in a random language, then morphs to English ----
+  (function(){
+    var english = {
+      code:'EN',
+      role:'OPERATIONS DIRECTOR — GLOBAL CONTENT & QUALITY OPERATIONS',
+      desc:'I build and scale global content operations, vendor programs, and quality systems for streaming and entertainment companies — bringing structure to complex, ambiguous environments across 50+ countries.',
+      cta:'Get in touch',
+      resume:'View resume'
+    };
+    var translations = [
+      { code:'JA', lang:'ja', jp:true,
+        role:'オペレーション・ディレクター — グローバル・コンテンツ＆品質統括',
+        desc:'ストリーミングおよびエンターテインメント企業向けに、グローバルなコンテンツ運用、ベンダープログラム、品質システムを構築・拡大しています。50カ国以上にわたる複雑で曖昧な環境に構造をもたらします。',
+        cta:'お問い合わせ', resume:'職務経歴を見る' },
+      { code:'FR', lang:'fr',
+        role:'DIRECTEUR DES OPÉRATIONS — CONTENU MONDIAL & QUALITÉ',
+        desc:'Je conçois et développe des opérations de contenu mondiales, des programmes de fournisseurs et des systèmes qualité pour les entreprises de streaming et de divertissement — en apportant de la structure à des environnements complexes et ambigus dans plus de 50 pays.',
+        cta:'Me contacter', resume:'Voir le CV' },
+      { code:'ES', lang:'es',
+        role:'DIRECTOR DE OPERACIONES — CONTENIDO GLOBAL Y CALIDAD',
+        desc:'Diseño y escalo operaciones de contenido globales, programas de proveedores y sistemas de calidad para empresas de streaming y entretenimiento, aportando estructura a entornos complejos y ambiguos en más de 50 países.',
+        cta:'Contactar', resume:'Ver currículum' },
+      { code:'DE', lang:'de',
+        role:'OPERATIONS DIRECTOR — GLOBALER CONTENT & QUALITÄT',
+        desc:'Ich baue globale Content-Operations, Partnerprogramme und Qualitätssysteme für Streaming- und Medienunternehmen auf — und bringe Struktur in komplexe, unklare Umgebungen in über 50 Ländern.',
+        cta:'Kontakt aufnehmen', resume:'Lebenslauf ansehen' },
+      { code:'IT', lang:'it',
+        role:'DIRETTORE OPERATIVO — CONTENUTI GLOBALI E QUALITÀ',
+        desc:'Costruisco e scalo operazioni di contenuto globali, programmi per fornitori e sistemi di qualità per aziende di streaming e intrattenimento, portando struttura in ambienti complessi in oltre 50 paesi.',
+        cta:'Contattami', resume:'Vedi curriculum' },
+      { code:'PT', lang:'pt',
+        role:'DIRETOR DE OPERAÇÕES — CONTEÚDO GLOBAL E QUALIDADE',
+        desc:'Construo e escalo operações de conteúdo globais, programas de fornecedores e sistemas de qualidade para empresas de streaming e entretenimento, trazendo estrutura para ambientes complexos em mais de 50 países.',
+        cta:'Entre em contato', resume:'Ver currículo' }
+    ];
+
+    var tag = document.getElementById('langTag');
+    var roleEl = document.getElementById('roleText');
+    var descEl = document.getElementById('heroDesc');
+    var ctaEl = document.getElementById('ctaPrimaryText');
+    var resumeEl = document.getElementById('ctaResumeText');
+    var morphs = document.querySelectorAll('.morph');
+    function setAll(cls, on){
+      for(var i=0;i<morphs.length;i++) morphs[i].classList[on ? 'add' : 'remove'](cls);
+    }
+    if(!tag || !roleEl || !descEl || !ctaEl || !resumeEl){ setAll('visible', true); return; }
+
+    function apply(t, isEnglish){
+      tag.textContent = t.code;
+      roleEl.textContent = t.role;
+      descEl.textContent = t.desc;
+      ctaEl.textContent = t.cta;
+      resumeEl.textContent = t.resume;
+      [roleEl, descEl, ctaEl, resumeEl].forEach(function(el){
+        if(isEnglish){ el.removeAttribute('lang'); } else { el.setAttribute('lang', t.lang); }
+        el.classList.toggle('lang-jp', !!(t.jp && !isEnglish));
+      });
+    }
+
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduced){ apply(english, true); setAll('visible', true); return; }
+
+    apply(translations[Math.floor(Math.random() * translations.length)], false);
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ setAll('visible', true); });
+    });
+    setTimeout(function(){
+      setAll('swap', true);
+      setTimeout(function(){ apply(english, true); setAll('swap', false); }, 420);
+    }, 2200);
+  })();
+
+  // ---- Hero photo: more visible at top, fades as you scroll past it ----
+  (function(){
+    var heroEl = document.querySelector('.hero');
+    var photoEl = document.querySelector('.hero-photo');
+    if(!heroEl || !photoEl) return;
+
+    var START_OPACITY = 0.30;
+    var END_OPACITY = 0.05;
+    var ticking = false;
+
+    function update(){
+      var heroHeight = heroEl.offsetHeight || 1;
+      var progress = Math.min(Math.max(window.scrollY / heroHeight, 0), 1);
+      photoEl.style.opacity = START_OPACITY + (END_OPACITY - START_OPACITY) * progress;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function(){
+      if(!ticking){
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('resize', update);
+    update();
+  })();
 </script>
 
 </body>
